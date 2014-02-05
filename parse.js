@@ -91,12 +91,4 @@
     var c = new Rule(T, [E]);
 
     console.log(Parse("( ( 1 ) )".split(/\s+/), [a,b,c], E));
-}(
-    !function() {
-        try {
-            return module.exports;
-        } catch(e) {
-            return window.Earley;
-        }
-    }()
-);
+}();
