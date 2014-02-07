@@ -1,6 +1,3 @@
-/*
- Earley parser
-*/
 ~ function(exp) {
     function Rule(name, symbols, postprocess) {
         this.name = name;
@@ -17,7 +14,9 @@
         this.data = [];
     }
     State.prototype.consume = function(inp) {
-        if (this.rule.symbols[this.expect] === inp) {
+
+        var rem = Object.prototype.toString.call(this.rule.symbols[this.expect]) === '[object RegExp]' && this.rule.symbols[this.expect].test(inp);
+        if (rem || this.rule.symbols[this.expect] === inp) {
             var a = new State(this.rule, this.expect+1, this.reference);
 
             a.data = this.data.slice(0);
@@ -31,14 +30,25 @@
         if (this.expect === this.rule.symbols.length) {
             this.data = this.rule.postprocess(this.data);
             var me = this;
-            table[this.reference].forEach(function(s) {
+            var w = 0;
+            while (w < table[this.reference].length) {
+                var s = table[this.reference][w];
                 var x = s.consume(me.rule.name);
                 if (x) {
                     x.data[x.data.length-1] = me.data;
                     table[location].push(x);
                     x.complete(table, location);
                 }
-            });
+                w++;
+            }
+            /*table[this.reference].forEach(function(s) {
+                var x = s.consume(me.rule.name);
+                if (x) {
+                    x.data[x.data.length-1] = me.data;
+                    table[location].push(x);
+                    x.complete(table, location);
+                }
+            });*/
         }
     }
 
@@ -53,7 +63,9 @@
         rules.forEach(function (r) {
             table[0].push(r.getStartState(0));
         });
-
+        table[0].forEach(function(s) {
+            s.complete(table, 0);
+        });
         for (var current = 0; current < tokens.length; current++) {
             table.push([]);
             table[current].forEach(function(s) {
@@ -62,13 +74,17 @@
                     table[current+1].push(x);
                 }
             });
-            table[current+1].forEach(function(s) {
-                s.complete(table, current+1);
-            });
+            // TODO: This isn't the right thing
+            // you want to only push in what you want
             rules.forEach(function (r) {
                 table[current+1].push(r.getStartState(current+1));
             });
+            table[current+1].forEach(function(s) {
+                s.complete(table, current+1);
+            });
         }
+        console.log(require('util').inspect(table, null, {depth:-1}));
+
         var considerations = [];
         table[table.length-1].forEach(function (t) {
             if (t.rule.name === start && t.expect === t.rule.symbols.length && t.reference === 0) {
@@ -83,12 +99,22 @@
     }
 
 
-    var E = {"rule":"E"};
-    var T = {"rule":"T"};
+    //var E = {"rule":"E"};
+    //var T = {"rule":"T"};
 
-    var a = new Rule(E, ["1"]);
-    var b = new Rule(E, ["(", E, ")"]);
-    var c = new Rule(T, [E]);
+    //var a = new Rule(E, [new RegExp("[0-9]+")], function(d) {return parseFloat(d);});
+    //var b = new Rule(E, [E, "*", E], function(d) {return d[0] * d[2]; });
+    //var c = new Rule(E, [E, "+", E], function(d) {return d[0] + d[2]; });
+    // TODO OOOps
+    //console.log(Parse("1 + 2 * 3 + 4".split(/\s+/), [a,b, c], E));
 
-    console.log(Parse("( ( 1 ) )".split(/\s+/), [a,b,c], E));
+    //var S = {rule:'S'}
+    //var a = new Rule(S, [S, 'b'])
+    //var b = new Rule(S, [])
+    //console.log(Parse(["b", "b", "b"], [a, b], S));
+
+    var S = {rule:'S'}
+    var a = new Rule(S, [S, S, 'b'])
+    var b = new Rule(S, [])
+    console.log(Parse(["b", "b", "b"], [a, b], S));
 }();
