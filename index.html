@@ -14,11 +14,11 @@
 				font-family: Menlo, Monaco, Consolas, Courier New, monospace;
 				background-color: #eee;
 				border-radius: 4px;
-				font-size: 25px;
+				font-size: 20px;
 				letter-spacing: 3px;
 				display: block;
 				margin: 30px;
-				width:50%;
+				width:70%;
 				margin-left: auto;
 				margin-right: auto;
 			}
@@ -29,7 +29,7 @@
 			#output-container {
 				font-family: Menlo, Monaco, Consolas, Courier New, monospace;
 				font-size: 30px;
-				width:50%;
+				width:70%;
 				margin-left: auto;
 				margin-right: auto;
 				text-align: center;
@@ -61,9 +61,12 @@
 				background-color: #fee;
 			}
 			#desc, #output-explanation {
-				width:50%;
+				width:70%;
 				margin-left: auto;
 				margin-right: auto;
+			}
+			#output-explanation {
+				color: #ccc;
 			}
 			.char {
 				color:black;
@@ -76,15 +79,11 @@
 	<body>
 		<div id="desc">
 			<h1>Legible</h1>
-			<p>A tool to make regular expressions human-friendly. Legible highlights regexes, and provides friendly explanations of what different symbols mean. Try it out!
-
-			<p>Legible runs on an Earley parser built as an an assignment. <code>parser.js</code> contains the parser, and <code>regex.js</code> contains a context-free grammar for regexes, as well as the highlighting interface.
-
-			<p>Enjoy!
+			<p>A tool to make regular expressions human-friendly. Legible highlights regexes, and provides friendly explanations of what different symbols mean. Try it out! The default regex below is meant to match URLs.
 
 			<p style="text-align:right;">~Hardmath123
 		</div>
-		<input id="input-box" type="text" value="[a-z0-9_]@gmail\.(com|org)" placeholder="[a-z0-9_]@gmail\.(com|org)" spellcheck="false"/>
+		<input id="input-box" type="text" value="^(?:https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$" placeholder="Enter a regex here." spellcheck="false"/>
 		<div id="output-container"></div>
 		<div id="output-explanation"></div>
 	</body>
