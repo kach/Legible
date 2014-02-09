@@ -48,14 +48,14 @@
 				background-color: #cfc;
 			}
 			.symbol {
-				color: #aaa;
+				color: rgba(0,0,0,0.3);
 			}
 			.symbol.highlit {
 				color: #aca;
 				background-color: transparent;
 			}
 			.paren {
-				color: #ccc;
+				color: rgba(0,0,0,0.3);
 			}
 			.paren.highlit {
 				background-color: #fee;
@@ -65,8 +65,11 @@
 				margin-left: auto;
 				margin-right: auto;
 			}
+			.char {
+				color:black;
+			}
 			.char.highlit {
-				background-color: #ccf;
+				background-color: #eef;
 			}
 		</style>
 	</head>
@@ -81,7 +84,7 @@
 
 			<p style="text-align:right;">~Hardmath123
 		</div>
-		<input id="input-box" type="text" value="colou?r" placeholder="colou?r" spellcheck="false"/>
+		<input id="input-box" type="text" value="[a-z0-9_]@gmail\.(com|org)" placeholder="[a-z0-9_]@gmail\.(com|org)" spellcheck="false"/>
 		<div id="output-container"></div>
 		<div id="output-explanation"></div>
 	</body>

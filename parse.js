@@ -63,7 +63,6 @@
         }
         var table = [];
         table.push([]);
-
         // I could be expecting anything!
         var addedRules = [];
         rules.forEach(function (r) {
@@ -101,44 +100,6 @@
             return false;
         }
     }
-    /*
-    // Test epsilon
-    var S = {rule:'S'}
-    var a = new Rule(S, [S, S, 'b'])
-    var b = new Rule(S, [])
-    //console.log(Parse(["b", "b", "b"], [a, b], S));
-
-    var N = {};
-    var I = {};
-    var P = {};
-    var E = {};
-    var M = {};
-    var A = {};
-    var id = function(d) {return d[0]};
-    var rules = [
-        new Rule(I, [/[0-9]/, I], function(d){return d[0]+d[1];}),
-        new Rule(I, [/[0-9]/], function(d){return d[0];}),
-
-        new Rule(N, [I], function(d) {return parseFloat(d[0]);}),
-        new Rule(N, [I, ".", I], function(d) {return parseFloat(d[0]+"."+d[2]);}),
-
-        new Rule(P, ["(", S, ")"], function(d){return d[1];}),
-        new Rule(P, [N], id),
-
-
-        new Rule(E, [P, "^", E], function(d){return Math.pow(d[0], d[2])}),
-        new Rule(E, [P], id),
-
-        new Rule(M, [M, "*", E], function(d) {return d[0]*d[2]}),
-        new Rule(M, [M, "/", E], function(d) {return d[0]/d[2]}),
-        new Rule(M, [E], id),
-
-        new Rule(S, [S, "+", M], function(d) {return d[0]+d[2]}),
-        new Rule(S, [S, "-", M], function(d) {return d[0]-d[2]}),
-        new Rule(S, [M], id),
-    ];
-    console.log(Parse("3*2 + 5.2^4".replace(/\s+/g, "").split("") , rules, S));
-    */
     var out = window.Earley = {};
     out.Parse = Parse;
     out.Rule = Rule;
