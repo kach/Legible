@@ -7,7 +7,7 @@
         var ALTERNATION = {};
         var id = function(d) {return d[0]};
         var CHAR = {};
-        var yuck = /[^\\\.\?\+\)\(\|]/
+        var yuck = /[^\\\?\*\+\)\(\|]/
         var rules = [
             new Earley.Rule(CHAR, [yuck], id),
             new Earley.Rule(CHAR, ["\\", /./], function (d) {return d[0]+d[1];}),
@@ -53,6 +53,36 @@
         if (typeof parsed === 'string') {
             var out = document.createElement("span");
             out.innerHTML = parsed;
+            out.className = "char";
+            if (parsed.length > 1 || [".", "^", "$"].indexOf(parsed) !== -1) {
+                out.addEventListener("mouseover", function(){
+                    out.className += " highlit";
+                    document.getElementById("output-explanation").appendChild(
+                        document.createTextNode({
+                            "\\w": "Word characters (letters of both cases, numbers, and the underscore).",
+                            "\\W": "Anything that isn't a letter, number, or underscore.",
+                            ".": "Any character",
+                            "\\d": "A base-10 digit (0 to 9)",
+                            "\\D": "Anything that isn't a base-10 digit (0-9)",
+                            "\\s": "Whitespace (space, tab, or line break)",
+                            "\\S": "A non-whitespace character",
+                            "\\t": "Tab",
+                            "\\r": "Carriage return",
+                            "\\n": "A line break",
+                            "\\v": "Vertical tab",
+                            "\\f": "Form feed",
+                            "$": "End of the input",
+                            "^": "The beginning of the input",
+                        }[parsed] || "A '"+parsed.charAt(1)+"'")
+                    );
+                }, false);
+                out.addEventListener("mouseout", function(){
+                    out.className = out.className.replace("highlit", "");
+                    document.getElementById("output-explanation").removeChild(
+                        document.getElementById("output-explanation").firstChild
+                    );
+                }, false);
+            }
             return out;
         } else if (Array.isArray(parsed)) {
             var out = document.createElement("span");
@@ -74,9 +104,9 @@
                 text.addEventListener("mouseover", function(){
                     left.className += " highlit";
                     right.className += " highlit";
-                    text.className += " highlit-symbol";
+                    text.className += " highlit";
                     document.getElementById("output-explanation").appendChild(
-                        document.createTextNode(Stringify("'"+parsed.arg[0] + "' or '" + Stringify(parsed.arg[1])+"'"))
+                        document.createTextNode("'"+Stringify(parsed.arg[0]) + "' or '" + Stringify(parsed.arg[1])+"'")
                     );
                 }, false);
                 text.addEventListener("mouseout", function(){
