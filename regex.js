@@ -1,3 +1,7 @@
+// TODO
+// Char ranges
+// Empty regex should work
+// Finish all \rules
 ~function() {
     function ParseRegex(r) {
         var PATTERN = {};
@@ -71,6 +75,8 @@
                             "\\n": "A line break",
                             "\\v": "Vertical tab",
                             "\\f": "Form feed",
+                            "\\b": "A boundary between words",
+                            "\\B": "Something that isn't a boundary between words",
                             "$": "End of the input",
                             "^": "The beginning of the input",
                         }[parsed] || "A '"+parsed.charAt(1)+"'")
