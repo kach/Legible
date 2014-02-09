@@ -7,13 +7,78 @@
 			body {
 				font-family: sans-serif;
 			}
+			#input-box {
+				border-style: none;
+				text-align: center;
+				font-family: Menlo, Monaco, Consolas, Courier New, monospace;
+				background-color: #eee;
+				border-radius: 4px;
+				font-size: 25px;
+				letter-spacing: 3px;
+				display: block;
+				margin: 30px;
+				width:50%;
+				margin-left: auto;
+				margin-right: auto;
+			}
+			#input-box:focus {
+				outline: none;
+				background-color: #eed;
+			}
 			#output-container {
 				font-family: Menlo, Monaco, Consolas, Courier New, monospace;
 				font-size: 30px;
+				width:50%;
+				margin-left: auto;
+				margin-right: auto;
+				text-align: center;
+				cursor: default;
+				word-wrap: break-word;
+				padding: 10px;
+			}
+			#output-container span {
+				border-radius: 3px;
+				padding:5px;
+			}
+			.error {
+				color:#FAA;
+			}
+			.highlit {
+				background-color: #cfc;
+			}
+			.symbol {
+				color: #aaa;
+			}
+			.symbol.highlit {
+				color: #aca;
+				background-color: transparent;
+			}
+			.paren {
+				color: #ccc;
+			}
+			.paren.highlit {
+				background-color: #fee;
+			}
+			#desc, #output-explanation {
+				width:50%;
+				margin-left: auto;
+				margin-right: auto;
 			}
 		</style>
 	</head>
 	<body>
+		<div id="desc">
+			<h1>Legible</h1>
+			<p>A tool to make regular expressions human-friendly. Legible highlights regexes, and provides friendly explanations of what different symbols mean. Try it out!
+
+			<p>Legible runs on an Earley parser built as an an assignment. <code>parser.js</code> contains the parser, and <code>regex.js</code> contains a context-free grammar for regexes, as well as the highlighting interface.
+
+			<p>Enjoy!
+
+			<p style="text-align:right;">~Hardmath123
+		</div>
+		<input id="input-box" type="text" value="colou?r" placeholder="colou?r" spellcheck="false"/>
 		<div id="output-container"></div>
+		<div id="output-explanation"></div>
 	</body>
 </html>
