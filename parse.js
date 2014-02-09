@@ -1,3 +1,10 @@
+function dump(o) {
+    console.log(require('util').inspect(
+        o,
+        null,
+        {depth:-1}
+    ));
+}
 ~ function(exp) {
     function Rule(name, symbols, postprocess) {
         this.name = name;
@@ -14,9 +21,7 @@
         this.data = [];
     }
     State.prototype.consume = function(inp) {
-
-        //var rem = Object.prototype.toString.call(this.rule.symbols[this.expect]) === '[object RegExp]' && this.rule.symbols[this.expect].test(inp);
-        var rem = this.rule.symbols[this.expect] && this.rule.symbols[this.expect].test && this.rule.symbols[this.expect].test(inp);
+        var rem = typeof inp === 'string' && this.rule.symbols[this.expect] && this.rule.symbols[this.expect].test && this.rule.symbols[this.expect].test(inp);
         if (rem || this.rule.symbols[this.expect] === inp) {
             var a = new State(this.rule, this.expect+1, this.reference);
 
@@ -91,8 +96,6 @@
                 s.process(table, current+1, rules, addedRules);
             });
         }
-        //console.log(require('util').inspect(table, null, {depth:-1}));
-        //console.log(table[table.length-1].length)
         var considerations = [];
         table[table.length-1].forEach(function (t) {
             if (t.rule.name === start && t.expect === t.rule.symbols.length && t.reference === 0) {
@@ -105,21 +108,8 @@
             return false;
         }
     }
-
-    var E = {"name":"E"};
-    var T = {"name":"M"};
-
-    var a = new Rule(E, [new RegExp("[0-9]+")], function(d) {return parseFloat(d);});
-    var a1= new Rule(E, ["(", E, ")"], function(d) {return d[1]})
-    var b = new Rule(E, [E, "*", E], function(d) {return d[0] * d[2]; });
-    var c = new Rule(E, [E, "+", E], function(d) {return d[0] + d[2]; });
-    //console.log(Parse("( 1 + 3 ) * 2".split(/\s+/), [a,b,c, a1], E));
-
-    var S = {rule:'S'}
-    var a = new Rule(S, [S, 'b'])
-    var b = new Rule(S, [])
-    //console.log(Parse(["b", "b", "b", "b"], [a, b], S));
-
+    /*
+    // Test epsilon
     var S = {rule:'S'}
     var a = new Rule(S, [S, S, 'b'])
     var b = new Rule(S, [])
@@ -152,7 +142,38 @@
 
         new Rule(S, [S, "+", M], function(d) {return d[0]+d[2]}),
         new Rule(S, [S, "-", M], function(d) {return d[0]-d[2]}),
-        new Rule(S, [M], id)
+        new Rule(S, [M], id),
     ];
     console.log(Parse("3*2 + 5.2^4".replace(/\s+/g, "").split("") , rules, S));
+    */
+    function ParseRegex(r) {
+        var PATTERN = {};
+        var PAREN = {};
+        var KLEENE = {};
+        var CONCATENATION = {};
+        var ALTERNATION = {};
+        var id = function(d) {return d[0]};
+        var CHAR = {};
+        var rules = [
+            new Rule(CHAR, [/[\w\.]/], id),
+            new Rule(CHAR, ["\\", /\w/], id),
+
+            new Rule(PAREN, ["(", PATTERN, ")"], function(d){return d[1];}),
+            new Rule(PAREN, [CHAR], id),
+
+            new Rule(KLEENE, [KLEENE, "*"], function(d) {return {type:"*", arg:d[0]}}),
+            new Rule(KLEENE, [KLEENE, "?"], function(d) {return {type:"?", arg:d[0]}}),
+            new Rule(KLEENE, [KLEENE, "+"], function(d) {return {type:"+", arg:d[0]}}),
+            new Rule(KLEENE, [PAREN], id),
+
+            new Rule(CONCATENATION, [KLEENE]),
+            new Rule(CONCATENATION, [CONCATENATION, KLEENE], function(d) {return d[0].concat([d[1]])}),
+
+            new Rule(ALTERNATION, [CONCATENATION, "|", CONCATENATION], function(d) {return {type:"|", arg:[d[0], d[2]]}}),
+            new Rule(ALTERNATION, [CONCATENATION], id),
+            new Rule(PATTERN, [ALTERNATION], id),
+        ];
+        return Parse(r.replace(/\s+/g, "").split(""), rules, PATTERN);
+    }
+    dump(ParseRegex("my??"));
 }();
