@@ -40,7 +40,6 @@
 			#output-container span {
 				border-radius: 3px;
 				padding:5px;
-				color: black;
 			}
 			.error {
 				color:#FAA;
@@ -49,14 +48,14 @@
 				background-color: #cfc;
 			}
 			.symbol {
-				color: #aaa;
+				color: rgba(0,0,0,0.3);
 			}
 			.symbol.highlit {
 				color: #aca;
 				background-color: transparent;
 			}
 			.paren {
-				color: #aaa;
+				color: rgba(0,0,0,0.3);
 			}
 			.paren.highlit {
 				background-color: #fee;
@@ -65,6 +64,9 @@
 				width:50%;
 				margin-left: auto;
 				margin-right: auto;
+			}
+			.char {
+				color:black;
 			}
 			.char.highlit {
 				background-color: #ccf;
@@ -82,7 +84,7 @@
 
 			<p style="text-align:right;">~Hardmath123
 		</div>
-		<input id="input-box" type="text" value="colou?r" placeholder="colou?r" spellcheck="false"/>
+		<input id="input-box" type="text" value="(colou?r)\s+" placeholder="(colou?r)\s+" spellcheck="false"/>
 		<div id="output-container"></div>
 		<div id="output-explanation"></div>
 	</body>
