@@ -87,6 +87,7 @@
             out.innerHTML = parsed;
             out.className = "char";
             if (parsed.length > 1 || [".", "^", "$"].indexOf(parsed) !== -1) {
+                out.className += " special";
                 out.addEventListener("mouseover", function(){
                     out.className += " highlit";
                     document.getElementById("output-explanation").appendChild(
