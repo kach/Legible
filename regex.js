@@ -1,7 +1,3 @@
-// TODO
-// Char ranges
-// Empty regex should work
-// Finish all \rules
 ~function() {
     function ParseRegex(r) {
         var PATTERN = {};
@@ -24,11 +20,11 @@
             new Earley.Rule(CHARSET, [CHAR], id),
 
             new Earley.Rule(CHARSETCHAR, [/[a-zA-Z0-9]/, "-", /[a-zA-Z0-9]/], function(d){return {"type":"charsetrange", "from":d[0], "to":d[2]}}),
-            new Earley.Rule(CHARSETCHAR, [ /[^\\?*+)(|\[\]\^]/ ], id),
+            new Earley.Rule(CHARSETCHAR, [ /[^\\\]\^]/ ], id),
             new Earley.Rule(CHARSETCHAR, ["\\", /./], function (d) {return d[0]+d[1];}),
 
             new Earley.Rule(CHARSETCHARLIST, [CHARSETCHAR]),
-            new Earley.Rule(CHARSETCHARLIST, [CHARSETCHARLIST, CHARSETCHAR], function(d){return d[0].concat(d[1])}),
+            new Earley.Rule(CHARSETCHARLIST, [CHARSETCHARLIST,CHARSETCHAR], function(d){return d[0].concat(d[1])}),
 
             new Earley.Rule(PAREN, ["(", PATTERN, ")"], function(d){return {type:"paren", arg:d[1]};}),
             new Earley.Rule(PAREN, [CHARSET], id),
@@ -44,6 +40,7 @@
             new Earley.Rule(ALTERNATION, [ALTERNATION, "|", CONCATENATION], function(d) {return {type:"|", arg:[d[0], d[2]]}}),
             new Earley.Rule(ALTERNATION, [CONCATENATION], id),
             new Earley.Rule(PATTERN, [ALTERNATION], id),
+            new Earley.Rule(PATTERN, [], function() {return []}),
         ];
         return Earley.Parse(r.replace(/\s+/g, "").split(""), rules, PATTERN);
     }
