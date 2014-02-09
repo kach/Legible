@@ -1,10 +1,3 @@
-function dump(o) {
-    console.log(require('util').inspect(
-        o,
-        null,
-        {depth:-1}
-    ));
-}
 ~ function(exp) {
     function Rule(name, symbols, postprocess) {
         this.name = name;
@@ -146,34 +139,7 @@ function dump(o) {
     ];
     console.log(Parse("3*2 + 5.2^4".replace(/\s+/g, "").split("") , rules, S));
     */
-    function ParseRegex(r) {
-        var PATTERN = {};
-        var PAREN = {};
-        var KLEENE = {};
-        var CONCATENATION = {};
-        var ALTERNATION = {};
-        var id = function(d) {return d[0]};
-        var CHAR = {};
-        var rules = [
-            new Rule(CHAR, [/[\w\.]/], id),
-            new Rule(CHAR, ["\\", /\w/], id),
-
-            new Rule(PAREN, ["(", PATTERN, ")"], function(d){return d[1];}),
-            new Rule(PAREN, [CHAR], id),
-
-            new Rule(KLEENE, [KLEENE, "*"], function(d) {return {type:"*", arg:d[0]}}),
-            new Rule(KLEENE, [KLEENE, "?"], function(d) {return {type:"?", arg:d[0]}}),
-            new Rule(KLEENE, [KLEENE, "+"], function(d) {return {type:"+", arg:d[0]}}),
-            new Rule(KLEENE, [PAREN], id),
-
-            new Rule(CONCATENATION, [KLEENE]),
-            new Rule(CONCATENATION, [CONCATENATION, KLEENE], function(d) {return d[0].concat([d[1]])}),
-
-            new Rule(ALTERNATION, [CONCATENATION, "|", CONCATENATION], function(d) {return {type:"|", arg:[d[0], d[2]]}}),
-            new Rule(ALTERNATION, [CONCATENATION], id),
-            new Rule(PATTERN, [ALTERNATION], id),
-        ];
-        return Parse(r.replace(/\s+/g, "").split(""), rules, PATTERN);
-    }
-    dump(ParseRegex("my??"));
+    var out = window.Earley = {};
+    out.Parse = Parse;
+    out.Rule = Rule;
 }();
